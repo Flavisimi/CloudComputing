@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    container_name: law_db
+    environment:
+      POSTGRES_USER: lawuser
+      POSTGRES_PASSWORD: lawpass
+      POSTGRES_DB: lawdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build: ./api
+    container_name: law_api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_NAME: lawdb
+      DB_USER: lawuser
+      DB_PASS: lawpass
+      DB_PORT: 5432
+
+volumes:
+  pgdata:
