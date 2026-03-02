@@ -1,0 +1,1216 @@
+{
+  "info": {
+    "name": "Laws API",
+    "_postman_id": "a1b2c3d4-0000-0000-0000-000000000001",
+    "description": "Colecție completă pentru Laws API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url",       "value": "http://localhost:8080" },
+    { "key": "law_id",         "value": "26fa0472-475f-4aa2-93af-747740a0ae8b" },
+    { "key": "article_id",     "value": "52539648-c59f-4a6d-9e96-3cd62b78258f" },
+    { "key": "to_article_id",  "value": "549d849b-b66a-40b2-968e-c61f84022ad0" },
+    { "key": "tag_id",         "value": "85f845e5-610a-4fdb-a0c1-603dddebf58e" },
+    { "key": "amendment_id",   "value": "84c4c7eb-57ea-48df-9fd2-e76bcad8a7da" }
+
+  ],
+  "item": [
+
+    {
+      "name": "Laws",
+      "item": [
+        {
+          "name": "GET /laws — page 1 (default)",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/laws",
+              "host": ["{{base_url}}"], "path": ["laws"]
+            },
+            "description": "Prima pagină (5 rezultate), sortare implicită created_at ASC."
+          }
+        },
+        {
+          "name": "GET /laws — page 2",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/laws?page=2",
+              "host": ["{{base_url}}"], "path": ["laws"],
+              "query": [{ "key": "page", "value": "2", "description": "Număr pagină, începe de la 1" }]
+            }
+          }
+        },
+        {
+          "name": "GET /laws — sort title DESC",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/laws?sort=title&order=desc",
+              "host": ["{{base_url}}"], "path": ["laws"],
+              "query": [
+                { "key": "sort",  "value": "title",  "description": "Câmpuri permise: title | created_at | status | promulgation_date" },
+                { "key": "order", "value": "desc",   "description": "asc | desc" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /laws — sort promulgation_date ASC",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/laws?sort=promulgation_date&order=asc",
+              "host": ["{{base_url}}"], "path": ["laws"],
+              "query": [
+                { "key": "sort",  "value": "promulgation_date" },
+                { "key": "order", "value": "asc" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /laws — filter status=active",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/laws?status=active",
+              "host": ["{{base_url}}"], "path": ["laws"],
+              "query": [{ "key": "status", "value": "active", "description": "draft | active | repealed" }]
+            }
+          }
+        },
+        {
+          "name": "GET /laws — filter status=draft",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/laws?status=draft",
+              "host": ["{{base_url}}"], "path": ["laws"],
+              "query": [{ "key": "status", "value": "draft" }]
+            }
+          }
+        },
+        {
+          "name": "GET /laws — filter status=repealed",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/laws?status=repealed",
+              "host": ["{{base_url}}"], "path": ["laws"],
+              "query": [{ "key": "status", "value": "repealed" }]
+            }
+          }
+        },
+        {
+          "name": "GET /laws — filter title keyword",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/laws?title=digital",
+              "host": ["{{base_url}}"], "path": ["laws"],
+              "query": [{ "key": "title", "value": "digital", "description": "ILIKE match parțial, case-insensitive" }]
+            }
+          }
+        },
+        {
+          "name": "GET /laws — combined: status + sort + page",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/laws?status=active&sort=promulgation_date&order=desc&page=1",
+              "host": ["{{base_url}}"], "path": ["laws"],
+              "query": [
+                { "key": "status", "value": "active" },
+                { "key": "sort",   "value": "promulgation_date" },
+                { "key": "order",  "value": "desc" },
+                { "key": "page",   "value": "1" }
+              ]
+            },
+            "description": "Legi active, sortate după data promulgării, cele mai recente primele."
+          }
+        },
+        {
+          "name": "GET /laws — invalid status (400)",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/laws?status=unknown",
+              "host": ["{{base_url}}"], "path": ["laws"],
+              "query": [{ "key": "status", "value": "unknown" }]
+            },
+            "description": "Returnează 400 pentru valoare invalidă de status."
+          }
+        },
+        {
+          "name": "GET /laws — invalid sort field (400)",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/laws?sort=nonexistent",
+              "host": ["{{base_url}}"], "path": ["laws"],
+              "query": [{ "key": "sort", "value": "nonexistent" }]
+            },
+            "description": "Returnează 400 cu lista câmpurilor permise."
+          }
+        },
+        {
+          "name": "POST /laws — minimal (doar title)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Law on Digital Identity\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{base_url}}/laws", "host": ["{{base_url}}"], "path": ["laws"] },
+            "description": "Singurul câmp obligatoriu este title. Status implicit: draft."
+          }
+        },
+        {
+          "name": "POST /laws — complet",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Law on Environmental Protection\",\n  \"description\": \"Reglementează emisiile industriale și managementul deșeurilor.\",\n  \"status\": \"active\",\n  \"metadata\": {\n    \"importance\": \"high\",\n    \"source\": \"official_monitor\",\n    \"reference_number\": \"LP-2024-042\",\n    \"ministry\": \"Ministry of Environment\"\n  }\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{base_url}}/laws", "host": ["{{base_url}}"], "path": ["laws"] }
+          }
+        },
+        {
+          "name": "POST /laws — status invalid (422)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Bad Law\",\n  \"status\": \"published\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{base_url}}/laws", "host": ["{{base_url}}"], "path": ["laws"] },
+            "description": "422 — status trebuie să fie draft | active | repealed."
+          }
+        },
+        {
+          "name": "POST /laws — title lipsă (422)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Fără titlu\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{base_url}}/laws", "host": ["{{base_url}}"], "path": ["laws"] }
+          }
+        },
+        {
+          "name": "POST /laws — JSON invalid (400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{ title: missing quotes }",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{base_url}}/laws", "host": ["{{base_url}}"], "path": ["laws"] }
+          }
+        },
+        {
+          "name": "GET /laws/:id",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/laws/{{law_id}}",
+              "host": ["{{base_url}}"], "path": ["laws", "{{law_id}}"]
+            },
+            "description": "Returnează legea cu UUID-ul dat. 404 dacă nu există sau e soft-deleted."
+          }
+        },
+        {
+          "name": "GET /laws/:id — not found (404)",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/laws/00000000-0000-0000-0000-000000000000",
+              "host": ["{{base_url}}"], "path": ["laws", "00000000-0000-0000-0000-000000000000"]
+            }
+          }
+        },
+        {
+          "name": "PUT /laws/:id — Full Replacement",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Completely New Law Title\",\n  \"description\": \"Noua descriere care o suprascrie pe cea veche.\",\n  \"status\": \"repealed\",\n  \"metadata\": {\n    \"replaced_entirely\": true\n  }\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/laws/{{law_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["laws", "{{law_id}}"]
+            },
+            "description": "Înlocuiește complet resursa. Câmpurile omise (ex: metadata) vor fi setate la empty/null. Titlul și statusul sunt obligatorii."
+          }
+        },
+        {
+          "name": "PATCH /laws/:id — merge metadata",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"importance\": \"critical\",\n  \"reviewed_by\": \"Ministry of Justice\",\n  \"last_review\": \"2024-11-01\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/laws/{{law_id}}",
+              "host": ["{{base_url}}"], "path": ["laws", "{{law_id}}"]
+            },
+            "description": "Merge JSON în coloana metadata (JSONB ||). Cheile existente sunt suprascrise."
+          }
+        },
+        {
+          "name": "PATCH /laws/:id — body gol (422)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}", "options": { "raw": { "language": "json" } } },
+            "url": {
+              "raw": "{{base_url}}/laws/{{law_id}}",
+              "host": ["{{base_url}}"], "path": ["laws", "{{law_id}}"]
+            }
+          }
+        },
+        {
+          "name": "DELETE /laws/:id",
+          "request": {
+            "method": "DELETE", "header": [],
+            "url": {
+              "raw": "{{base_url}}/laws/{{law_id}}",
+              "host": ["{{base_url}}"], "path": ["laws", "{{law_id}}"]
+            },
+            "description": "Soft-delete: setează deleted_at. Legea dispare din GET /laws. 404 dacă deja ștearsă."
+          }
+        },
+        {
+          "name": "DELETE /laws/:id — deja ștearsă (404)",
+          "request": {
+            "method": "DELETE", "header": [],
+            "url": {
+              "raw": "{{base_url}}/laws/{{law_id}}",
+              "host": ["{{base_url}}"], "path": ["laws", "{{law_id}}"]
+            },
+            "description": "Rulează a doua oară după DELETE de mai sus — trebuie să returneze 404."
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Tags",
+      "item": [
+        {
+          "name": "POST /laws/:id/tags — tag existent",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"urgent\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/laws/{{law_id}}/tags",
+              "host": ["{{base_url}}"], "path": ["laws", "{{law_id}}", "tags"]
+            },
+            "description": "Adaugă tag existent la lege. Dacă asocierea deja există, e ignorată silențios."
+          }
+        },
+        {
+          "name": "POST /laws/:id/tags — tag nou",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"climate-emergency\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/laws/{{law_id}}/tags",
+              "host": ["{{base_url}}"], "path": ["laws", "{{law_id}}", "tags"]
+            },
+            "description": "Tag-ul este creat automat dacă nu există."
+          }
+        },
+        {
+          "name": "POST /laws/:id/tags — name gol (422)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/laws/{{law_id}}/tags",
+              "host": ["{{base_url}}"], "path": ["laws", "{{law_id}}", "tags"]
+            }
+          }
+        },
+        {
+          "name": "POST /laws/:id/tags — lege inexistentă (404)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"urgent\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/laws/00000000-0000-0000-0000-000000000000/tags",
+              "host": ["{{base_url}}"], "path": ["laws", "00000000-0000-0000-0000-000000000000", "tags"]
+            }
+          }
+        },
+        {
+          "name": "GET /laws/:id/tags",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/laws/{{law_id}}/tags",
+              "host": ["{{base_url}}"], "path": ["laws", "{{law_id}}", "tags"]
+            },
+            "description": "Lista tuturor tag-urilor asociate legii."
+          }
+        }
+      ]
+    },
+    {
+          "name": "GET /tags — all tags & search",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/tags?search=urgent",
+              "host": ["{{base_url}}"],
+              "path": ["tags"],
+              "query": [
+                { "key": "search", "value": "urgent", "description": "Cautare partiala (ILIKE) in numele tag-ului", "disabled": true }
+              ]
+            },
+            "description": "Lista tuturor tag-urilor din sistem, cu numărul de legi asociate."
+          }
+        },
+        {
+          "name": "DELETE /laws/:id/tags/:tag_name",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/laws/{{law_id}}/tags/urgent",
+              "host": ["{{base_url}}"],
+              "path": ["laws", "{{law_id}}", "tags", "urgent"]
+            },
+            "description": "Elimină asocierea unui tag de pe o lege."
+          }
+        },
+
+    {
+      "name": "Articles",
+      "item": [
+        {
+          "name": "POST /laws/:id/articles — creare",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"article_number\": 1,\n  \"content\": \"Prezentul articol stabilește principiile generale de protecție a mediului aplicabile tuturor entităților juridice care operează pe teritoriul național.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/laws/{{law_id}}/articles",
+              "host": ["{{base_url}}"], "path": ["laws", "{{law_id}}", "articles"]
+            },
+            "description": "Creează articolul și prima versiune (version=1) atomic."
+          }
+        },
+        {
+          "name": "POST /laws/:id/articles — al doilea articol",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"article_number\": 2,\n  \"content\": \"Definițiile termenilor utilizați în prezenta lege sunt cele prevăzute în Legea-cadru nr. 195/2006.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/laws/{{law_id}}/articles",
+              "host": ["{{base_url}}"], "path": ["laws", "{{law_id}}", "articles"]
+            }
+          }
+        },
+        {
+          "name": "POST /laws/:id/articles — număr duplicat (409)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"article_number\": 1,\n  \"content\": \"Duplicate.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/laws/{{law_id}}/articles",
+              "host": ["{{base_url}}"], "path": ["laws", "{{law_id}}", "articles"]
+            },
+            "description": "409 — article_number 1 deja există pentru această lege."
+          }
+        },
+        {
+          "name": "POST /laws/:id/articles — content lipsă (422)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"article_number\": 3\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/laws/{{law_id}}/articles",
+              "host": ["{{base_url}}"], "path": ["laws", "{{law_id}}", "articles"]
+            }
+          }
+        },
+        {
+          "name": "POST /laws/:id/articles — article_number negativ (422)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"article_number\": -1,\n  \"content\": \"Invalid number.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/laws/{{law_id}}/articles",
+              "host": ["{{base_url}}"], "path": ["laws", "{{law_id}}", "articles"]
+            }
+          }
+        },
+        {
+          "name": "GET /articles/:id — ultima versiune",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/articles/{{article_id}}",
+              "host": ["{{base_url}}"], "path": ["articles", "{{article_id}}"]
+            },
+            "description": "Returnează id, article_number, content, version, changed_at pentru ultima versiune."
+          }
+        },
+        {
+          "name": "GET /articles/:id — not found (404)",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/articles/00000000-0000-0000-0000-000000000000",
+              "host": ["{{base_url}}"], "path": ["articles", "00000000-0000-0000-0000-000000000000"]
+            }
+          }
+        },
+        {
+          "name": "PATCH /articles/:id — versiune nouă",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Text revizuit: Prezentul articol stabilește principii actualizate de protecție a mediului, incorporând standardele Directivei UE 2024/112.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/articles/{{article_id}}",
+              "host": ["{{base_url}}"], "path": ["articles", "{{article_id}}"]
+            },
+            "description": "Creează version N+1. Versiunile anterioare sunt păstrate."
+          }
+        },
+        {
+          "name": "PATCH /articles/:id — a treia versiune",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"A treia iterație: clarificări suplimentare privind excluderea surselor de energie regenerabilă.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/articles/{{article_id}}",
+              "host": ["{{base_url}}"], "path": ["articles", "{{article_id}}"]
+            }
+          }
+        },
+        {
+          "name": "PATCH /articles/:id — content gol (422)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"   \"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/articles/{{article_id}}",
+              "host": ["{{base_url}}"], "path": ["articles", "{{article_id}}"]
+            }
+          }
+        },
+        {
+          "name": "GET /articles/:id/versions — page 1",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/articles/{{article_id}}/versions?page=1",
+              "host": ["{{base_url}}"], "path": ["articles", "{{article_id}}", "versions"],
+              "query": [{ "key": "page", "value": "1" }]
+            },
+            "description": "Istoricul complet al versiunilor, paginate câte 5."
+          }
+        },
+        {
+          "name": "GET /articles/:id/versions — page 2",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/articles/{{article_id}}/versions?page=2",
+              "host": ["{{base_url}}"], "path": ["articles", "{{article_id}}", "versions"],
+              "query": [{ "key": "page", "value": "2" }]
+            }
+          }
+        }
+      ]
+    },
+    {
+          "name": "GET /laws/:law_id/articles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/laws/{{law_id}}/articles?page=1&sort=article_number&order=asc",
+              "host": ["{{base_url}}"],
+              "path": ["laws", "{{law_id}}", "articles"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "sort", "value": "article_number" },
+                { "key": "order", "value": "asc" }
+              ]
+            },
+            "description": "Returnează doar ultima versiune a tuturor articolelor dintr-o anumită lege."
+          }
+        },
+        {
+          "name": "GET /articles — global search",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/articles?page=1&search=mediu&law_id={{law_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["articles"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "search", "value": "mediu", "description": "Căutare text în content" },
+                { "key": "law_id", "value": "{{law_id}}", "description": "Filtru opțional pe lege", "disabled": true }
+              ]
+            },
+            "description": "Caută prin absolut toate articolele din sistem."
+          }
+        },
+        {
+          "name": "DELETE /articles/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/articles/{{article_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["articles", "{{article_id}}"]
+            },
+            "description": "Soft-delete un articol (setează deleted_at)."
+          }
+        },
+
+    {
+      "name": "Amendments",
+      "item": [
+        {
+          "name": "GET /amendments — global list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/amendments?page=1&sort=amendment_date&order=desc",
+              "host": ["{{base_url}}"],
+              "path": ["amendments"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "sort", "value": "amendment_date" },
+                { "key": "order", "value": "desc" },
+                { "key": "approved", "value": "true", "description": "Opțional: true/false", "disabled": true }
+              ]
+            },
+            "description": "Lista globală cu toate amendamentele din sistem, incluzând detalii despre articol și legea de care aparțin."
+          }
+        },
+        {
+          "name": "POST /articles/:id/amendments — creare",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Alineatul 3 se modifică pentru a include sursele de energie regenerabilă ca exceptate de la cotele de emisii.\",\n  \"date\": \"2024-06-15\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/articles/{{article_id}}/amendments",
+              "host": ["{{base_url}}"], "path": ["articles", "{{article_id}}", "amendments"]
+            },
+            "description": "Data trebuie în format YYYY-MM-DD."
+          }
+        },
+        {
+          "name": "POST /articles/:id/amendments — a doua amendament",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Se introduce un nou alineat (4) privind obligațiile de raportare anuală.\",\n  \"date\": \"2024-09-01\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/articles/{{article_id}}/amendments",
+              "host": ["{{base_url}}"], "path": ["articles", "{{article_id}}", "amendments"]
+            }
+          }
+        },
+        {
+          "name": "POST /articles/:id/amendments — format dată greșit (422)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Modificare.\",\n  \"date\": \"15/06/2024\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/articles/{{article_id}}/amendments",
+              "host": ["{{base_url}}"], "path": ["articles", "{{article_id}}", "amendments"]
+            },
+            "description": "422 — data trebuie YYYY-MM-DD, nu DD/MM/YYYY."
+          }
+        },
+        {
+          "name": "POST /articles/:id/amendments — text lipsă (422)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"date\": \"2024-06-15\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/articles/{{article_id}}/amendments",
+              "host": ["{{base_url}}"], "path": ["articles", "{{article_id}}", "amendments"]
+            }
+          }
+        },
+        {
+          "name": "POST /articles/:id/amendments — dată lipsă (422)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Fără dată.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/articles/{{article_id}}/amendments",
+              "host": ["{{base_url}}"], "path": ["articles", "{{article_id}}", "amendments"]
+            }
+          }
+        },
+        {
+          "name": "GET /articles/:id/amendments — page 1",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/articles/{{article_id}}/amendments?page=1",
+              "host": ["{{base_url}}"], "path": ["articles", "{{article_id}}", "amendments"],
+              "query": [{ "key": "page", "value": "1" }]
+            },
+            "description": "Amendamente paginate, cele mai noi primele."
+          }
+        },
+        {
+          "name": "GET /articles/:id/amendments — page 2",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/articles/{{article_id}}/amendments?page=2",
+              "host": ["{{base_url}}"], "path": ["articles", "{{article_id}}", "amendments"],
+              "query": [{ "key": "page", "value": "2" }]
+            }
+          }
+        }
+      ]
+    },
+    {
+          "name": "GET /articles/:id/amendments — filter approved",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/articles/{{article_id}}/amendments?approved=true",
+              "host": ["{{base_url}}"],
+              "path": ["articles", "{{article_id}}", "amendments"],
+              "query": [
+                { "key": "approved", "value": "true", "description": "true sau false" }
+              ]
+            },
+            "description": "Filtrează amendamentele unui articol."
+          }
+        },
+        {
+          "name": "GET /amendments/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/amendments/REPLACE_WITH_AMENDMENT_ID",
+              "host": ["{{base_url}}"],
+              "path": ["amendments", "REPLACE_WITH_AMENDMENT_ID"]
+            },
+            "description": "Returnează un amendament specific."
+          }
+        },
+        {
+          "name": "PUT /amendments/:id — Full Replacement",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Înlocuirea completă a textului acestui amendament.\",\n  \"date\": \"2025-01-01\",\n  \"approved\": false\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/amendments/{{amendment_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["amendments", "{{amendment_id}}"]
+            },
+            "description": "Înlocuiește complet amendamentul. Toate câmpurile (text, date, approved) sunt obligatorii în body."
+          }
+        },
+        {
+          "name": "PATCH /amendments/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"approved\": true,\n  \"text\": \"Text corectat pentru acest amendament.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/amendments/REPLACE_WITH_AMENDMENT_ID",
+              "host": ["{{base_url}}"],
+              "path": ["amendments", "REPLACE_WITH_AMENDMENT_ID"]
+            },
+            "description": "Actualizează textul și/sau statusul (approved: true/false) unui amendament."
+          }
+        },
+        {
+          "name": "DELETE /amendments/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/amendments/REPLACE_WITH_AMENDMENT_ID",
+              "host": ["{{base_url}}"],
+              "path": ["amendments", "REPLACE_WITH_AMENDMENT_ID"]
+            },
+            "description": "Șterge permanent un amendament (doar dacă nu a fost aprobat)."
+          }
+        },
+
+    {
+      "name": "References",
+      "item": [
+        {
+          "name": "POST /articles/:id/references — adaugă referință",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"to\": \"{{to_article_id}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/articles/{{article_id}}/references",
+              "host": ["{{base_url}}"], "path": ["articles", "{{article_id}}", "references"]
+            },
+            "description": "Referință direcțională de la article_id → to_article_id. Ambele trebuie să existe."
+          }
+        },
+        {
+          "name": "POST /articles/:id/references — duplicat (409)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"to\": \"{{to_article_id}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/articles/{{article_id}}/references",
+              "host": ["{{base_url}}"], "path": ["articles", "{{article_id}}", "references"]
+            },
+            "description": "Rulează a doua oară — trebuie să returneze 409."
+          }
+        },
+        {
+          "name": "POST /articles/:id/references — self-reference (422)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"to\": \"{{article_id}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/articles/{{article_id}}/references",
+              "host": ["{{base_url}}"], "path": ["articles", "{{article_id}}", "references"]
+            },
+            "description": "422 — un articol nu se poate referi pe sine."
+          }
+        },
+        {
+          "name": "POST /articles/:id/references — target inexistent (404)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"to\": \"00000000-0000-0000-0000-000000000000\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/articles/{{article_id}}/references",
+              "host": ["{{base_url}}"], "path": ["articles", "{{article_id}}", "references"]
+            }
+          }
+        },
+        {
+          "name": "POST /articles/:id/references — câmp to lipsă (422)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/articles/{{article_id}}/references",
+              "host": ["{{base_url}}"], "path": ["articles", "{{article_id}}", "references"]
+            }
+          }
+        },
+        {
+          "name": "GET /articles/:id/references",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/articles/{{article_id}}/references",
+              "host": ["{{base_url}}"], "path": ["articles", "{{article_id}}", "references"]
+            },
+            "description": "Lista UUID-urilor articolelor la care face referință acest articol."
+          }
+        }
+      ]
+    },
+    {
+          "name": "GET /articles/:id/references/incoming",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/articles/{{to_article_id}}/references/incoming",
+              "host": ["{{base_url}}"],
+              "path": ["articles", "{{to_article_id}}", "references", "incoming"]
+            },
+            "description": "Ce alte articole fac referință la acest articol (referințe inverse)."
+          }
+        },
+        {
+          "name": "DELETE /articles/:id/references/:to_id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/articles/{{article_id}}/references/{{to_article_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["articles", "{{article_id}}", "references", "{{to_article_id}}"]
+            },
+            "description": "Șterge o referință direcțională."
+          }
+        },
+
+    {
+      "name": "Stats",
+      "item": [
+        {
+          "name": "GET /stats/laws-per-category",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/stats/laws-per-category",
+              "host": ["{{base_url}}"], "path": ["stats", "laws-per-category"]
+            },
+            "description": "Număr de legi per categorie. Include și categoriile fără legi (LEFT JOIN)."
+          }
+        },
+        {
+          "name": "GET /stats/most-amended-laws",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/stats/most-amended-laws",
+              "host": ["{{base_url}}"], "path": ["stats", "most-amended-laws"]
+            },
+            "description": "Top 5 legi după numărul total de amendamente."
+          }
+        },
+        {
+          "name": "GET /stats/articles-count",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/stats/articles-count",
+              "host": ["{{base_url}}"], "path": ["stats", "articles-count"]
+            },
+            "description": "Numărul total de articole ne-șterse."
+          }
+        },
+        {
+          "name": "GET /stats/amendments-per-year",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/stats/amendments-per-year",
+              "host": ["{{base_url}}"], "path": ["stats", "amendments-per-year"]
+            },
+            "description": "Număr de amendamente grupate pe an calendaristic."
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Audit",
+      "item": [
+        {
+          "name": "GET /audit — page 1",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/audit?page=1",
+              "host": ["{{base_url}}"], "path": ["audit"],
+              "query": [{ "key": "page", "value": "1" }]
+            },
+            "description": "Cele mai recente 5 intrări din audit log."
+          }
+        },
+        {
+          "name": "GET /audit — filter entity_type=LAW",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/audit?entity_type=LAW",
+              "host": ["{{base_url}}"], "path": ["audit"],
+              "query": [{ "key": "entity_type", "value": "LAW", "description": "Ex: LAW, ARTICLE, AMENDMENT" }]
+            }
+          }
+        },
+        {
+          "name": "GET /audit — filter action=CREATE",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/audit?action=CREATE",
+              "host": ["{{base_url}}"], "path": ["audit"],
+              "query": [{ "key": "action", "value": "CREATE", "description": "Ex: CREATE, UPDATE, DELETE" }]
+            }
+          }
+        },
+        {
+          "name": "GET /audit — filter action=DELETE",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/audit?action=DELETE",
+              "host": ["{{base_url}}"], "path": ["audit"],
+              "query": [{ "key": "action", "value": "DELETE" }]
+            }
+          }
+        },
+        {
+          "name": "GET /audit — combinat: entity + action + page",
+          "request": {
+            "method": "GET", "header": [],
+            "url": {
+              "raw": "{{base_url}}/audit?entity_type=LAW&action=CREATE&page=1",
+              "host": ["{{base_url}}"], "path": ["audit"],
+              "query": [
+                { "key": "entity_type", "value": "LAW" },
+                { "key": "action",      "value": "CREATE" },
+                { "key": "page",        "value": "1" }
+              ]
+            },
+            "description": "Toate acțiunile CREATE pe entități LAW, prima pagină."
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Bulk",
+      "item": [
+        {
+          "name": "POST /bulk/laws — batch valid",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"title\": \"Law on Cybersecurity\",\n    \"description\": \"Cadru pentru reziliența cibernetică națională.\"\n  },\n  {\n    \"title\": \"Law on Public Procurement\",\n    \"description\": \"Reguli pentru achizițiile guvernamentale.\"\n  },\n  {\n    \"title\": \"Law on Data Retention\",\n    \"description\": \"Retenție obligatorie date pentru operatori telecom.\"\n  }\n]",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/bulk/laws",
+              "host": ["{{base_url}}"], "path": ["bulk", "laws"]
+            },
+            "description": "Inserează mai multe legi într-o singură tranzacție. Max 100 items."
+          }
+        },
+        {
+          "name": "POST /bulk/laws — batch mare (10 legi)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\"title\": \"Bulk Law 1\"},\n  {\"title\": \"Bulk Law 2\"},\n  {\"title\": \"Bulk Law 3\"},\n  {\"title\": \"Bulk Law 4\"},\n  {\"title\": \"Bulk Law 5\"},\n  {\"title\": \"Bulk Law 6\"},\n  {\"title\": \"Bulk Law 7\"},\n  {\"title\": \"Bulk Law 8\"},\n  {\"title\": \"Bulk Law 9\"},\n  {\"title\": \"Bulk Law 10\"}\n]",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/bulk/laws",
+              "host": ["{{base_url}}"], "path": ["bulk", "laws"]
+            }
+          }
+        },
+        {
+          "name": "POST /bulk/laws — array gol (422)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "[]",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/bulk/laws",
+              "host": ["{{base_url}}"], "path": ["bulk", "laws"]
+            }
+          }
+        },
+        {
+          "name": "POST /bulk/laws — item fără title (422)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\"title\": \"Valid Law\"},\n  {\"description\": \"Fără title\"}\n]",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/bulk/laws",
+              "host": ["{{base_url}}"], "path": ["bulk", "laws"]
+            },
+            "description": "422 cu erori per-item. Fără inserții parțiale — tranzacție atomică."
+          }
+        },
+        {
+          "name": "POST /bulk/laws — nu e array (422)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Nu e array\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/bulk/laws",
+              "host": ["{{base_url}}"], "path": ["bulk", "laws"]
+            }
+          }
+        },
+        {
+          "name": "POST /bulk/laws — depășire limită 100 (422)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "[{\"title\": \"L1\"},{\"title\": \"L2\"},{\"title\": \"L3\"},{\"title\": \"L4\"},{\"title\": \"L5\"},{\"title\": \"L6\"},{\"title\": \"L7\"},{\"title\": \"L8\"},{\"title\": \"L9\"},{\"title\": \"L10\"},{\"title\": \"L11\"},{\"title\": \"L12\"},{\"title\": \"L13\"},{\"title\": \"L14\"},{\"title\": \"L15\"},{\"title\": \"L16\"},{\"title\": \"L17\"},{\"title\": \"L18\"},{\"title\": \"L19\"},{\"title\": \"L20\"},{\"title\": \"L21\"},{\"title\": \"L22\"},{\"title\": \"L23\"},{\"title\": \"L24\"},{\"title\": \"L25\"},{\"title\": \"L26\"},{\"title\": \"L27\"},{\"title\": \"L28\"},{\"title\": \"L29\"},{\"title\": \"L30\"},{\"title\": \"L31\"},{\"title\": \"L32\"},{\"title\": \"L33\"},{\"title\": \"L34\"},{\"title\": \"L35\"},{\"title\": \"L36\"},{\"title\": \"L37\"},{\"title\": \"L38\"},{\"title\": \"L39\"},{\"title\": \"L40\"},{\"title\": \"L41\"},{\"title\": \"L42\"},{\"title\": \"L43\"},{\"title\": \"L44\"},{\"title\": \"L45\"},{\"title\": \"L46\"},{\"title\": \"L47\"},{\"title\": \"L48\"},{\"title\": \"L49\"},{\"title\": \"L50\"},{\"title\": \"L51\"},{\"title\": \"L52\"},{\"title\": \"L53\"},{\"title\": \"L54\"},{\"title\": \"L55\"},{\"title\": \"L56\"},{\"title\": \"L57\"},{\"title\": \"L58\"},{\"title\": \"L59\"},{\"title\": \"L60\"},{\"title\": \"L61\"},{\"title\": \"L62\"},{\"title\": \"L63\"},{\"title\": \"L64\"},{\"title\": \"L65\"},{\"title\": \"L66\"},{\"title\": \"L67\"},{\"title\": \"L68\"},{\"title\": \"L69\"},{\"title\": \"L70\"},{\"title\": \"L71\"},{\"title\": \"L72\"},{\"title\": \"L73\"},{\"title\": \"L74\"},{\"title\": \"L75\"},{\"title\": \"L76\"},{\"title\": \"L77\"},{\"title\": \"L78\"},{\"title\": \"L79\"},{\"title\": \"L80\"},{\"title\": \"L81\"},{\"title\": \"L82\"},{\"title\": \"L83\"},{\"title\": \"L84\"},{\"title\": \"L85\"},{\"title\": \"L86\"},{\"title\": \"L87\"},{\"title\": \"L88\"},{\"title\": \"L89\"},{\"title\": \"L90\"},{\"title\": \"L91\"},{\"title\": \"L92\"},{\"title\": \"L93\"},{\"title\": \"L94\"},{\"title\": \"L95\"},{\"title\": \"L96\"},{\"title\": \"L97\"},{\"title\": \"L98\"},{\"title\": \"L99\"},{\"title\": \"L100\"},{\"title\": \"L101\"}]",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/bulk/laws",
+              "host": ["{{base_url}}"], "path": ["bulk", "laws"]
+            },
+            "description": "101 items — depășește limita de 100."
+          }
+        }
+      ]
+    }
+
+  ]
+}
