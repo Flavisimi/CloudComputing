@@ -1,17 +1,25 @@
+version: "3.9"
+
 services:
+
   db:
     image: postgres:16
     container_name: law_db
     environment:
-      POSTGRES_USER: lawuser
-      POSTGRES_PASSWORD: lawpass
-      POSTGRES_DB: lawdb
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - "5432:5432"
     volumes:
       - ./db/01-init.sql:/docker-entrypoint-initdb.d/01-init.sql
       - ./db/02-populate.sql:/docker-entrypoint-initdb.d/02-populate.sql
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   api:
     build: ./api
@@ -19,13 +27,30 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+
+  backend:
+    build: ./backend
+    container_name: law_backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - api
     environment:
-      DB_HOST: db
-      DB_NAME: lawdb
-      DB_USER: lawuser
-      DB_PASS: lawpass
-      DB_PORT: 5432
+      LAWS_API_URL: http://api:8080
+    env_file:
+      - .env
+
+  frontend:
+    build: ./frontend
+    container_name: law_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
 
 volumes:
   pgdata:
